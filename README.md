@@ -6,5 +6,5 @@ ECDSA 기반 키 페어(public, private) 생성
 
 ECDSA(public key, private key) >  pubkeyHash > checksum > Base58Encode(version + pubkeyhash + checksum)
 
-pubkeyHash = RIPEMD160(SHA256(Publickey))
+pubkeyHash = RIPEMD160(SHA256(Publickey)),
 checksum = SHA256(SHA256(PubkeyHash))
