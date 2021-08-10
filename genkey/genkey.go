@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func GenKey()(pub ecdsa.PublicKey,private *ecdsa.PrivateKey){
+func GenKey()(pub []byte ,private *ecdsa.PrivateKey){
 	//ECDSA KEYPAIR 생성
 	pubkeyCurve := elliptic.P256()
 	privateKey := new(ecdsa.PrivateKey)
@@ -17,8 +17,8 @@ func GenKey()(pub ecdsa.PublicKey,private *ecdsa.PrivateKey){
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	var pubkey ecdsa.PublicKey
-	pubkey = privateKey.PublicKey
+	var pubkey []byte
+	pubkey = append(privateKey.PublicKey.X.Bytes(), privateKey.PublicKey.Y.Bytes()...)
 
 	return pubkey, privateKey
 }
