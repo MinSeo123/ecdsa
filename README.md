@@ -8,3 +8,6 @@ ECDSA(public key, private key) >  pubkeyHash > checksum > Base58Encode(version +
 
 pubkeyHash = RIPEMD160(SHA256(Publickey)),
 checksum = SHA256(SHA256(PubkeyHash))
+
+privatekey와 signhash 를 더해 signature 생성 
+pubkey 와 signhash , signature를 더해 검증
