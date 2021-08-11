@@ -2,9 +2,9 @@
 # 비트코인 주소 체계를 기반으로 임의의 데이터의 전자서명 검증 로직 개발 
 
 ## 실행방법
-go mod tidy
-go mod init
-go build
+$go mod tidy<br/>
+$go mod init<br/>
+$go build<br/>
 
 ## 로직
 ECDSA 기반 키 페어(public, private) 생성
