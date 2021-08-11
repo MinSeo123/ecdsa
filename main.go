@@ -20,7 +20,8 @@ type BitcoinAddress struct {
 
 type Node struct {
 	bitcoinAddress string
-	signature string
+	signature []byte
+	signhash []byte
 	pubKey []byte
 	privateKey *ecdsa.PrivateKey
 }
@@ -30,6 +31,7 @@ type Node struct {
 func main() {
 	var B BitcoinAddress
 	var N Node
+	data := "hi my name is minseo"
 	//키페어 생성 (Pubkey, prikey)
 	pubKey, privateKey := genkey.GenKey()
 	//비트코인 주소 생성
@@ -37,10 +39,13 @@ func main() {
 	N.pubKey = pubKey
 	N.privateKey = privateKey
 	N.bitcoinAddress = bitcoinAddress
-	fmt.Println(bitcoinAddress)
+	//사인
+	signHash, signature := genkey.SignEcdsa(N.privateKey, data)
+	N.signhash = signHash
+	N.signature = signature
 	//검증
-	genkey.SignEcdsa(N.privateKey)
-
+	verify := genkey.Verifycation(N.signhash, N.signature, N.privateKey)
+	fmt.Println(verify)
 }
 
 func (B *BitcoinAddress) CreateAddress (pubkey []byte)  string {
