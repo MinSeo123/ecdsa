@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/ecdsa"
 	_ "crypto/sha256"
 	"fmt"
 	"github.com/MinSeo123/ecdsa/base58Encode"
@@ -17,41 +18,42 @@ type BitcoinAddress struct {
 	CheckSum []byte
 }
 
+type Node struct {
+	bitcoinAddress string
+	signature string
+	pubKey []byte
+	privateKey *ecdsa.PrivateKey
+}
+
+
 
 func main() {
-	var b BitcoinAddress
-
+	var B BitcoinAddress
+	var N Node
 	//키페어 생성 (Pubkey, prikey)
-	pubKey, _ := genkey.GenKey()
-	b.Version = []byte{1}
-	fmt.Println("펍키:",  pubKey)
-	//sha256을 이용한 해쉬 암호화
-	shaResult := shaEncrypt.ShaEncrypt(pubKey)
-	fmt.Println("Sha256" , shaResult)
-	fmt.Printf("sha256: %x", shaResult)
+	pubKey, privateKey := genkey.GenKey()
+	//비트코인 주소 생성
+	bitcoinAddress := B.CreateAddress(pubKey)
+	N.pubKey = pubKey
+	N.privateKey = privateKey
+	N.bitcoinAddress = bitcoinAddress
+	fmt.Println(bitcoinAddress)
+	//검증
+	genkey.SignEcdsa(N.privateKey)
 
+}
+
+func (B *BitcoinAddress) CreateAddress (pubkey []byte)  string {
+	B.Version = []byte{1}
+	//sha256을 이용한 해쉬 암호화
+	shaResult := shaEncrypt.ShaEncrypt(pubkey)
 	//RIPEMD
 	ripemdResult := ripemdEncrypt.RipemdEncrypt(shaResult)
-	fmt.Println()
-	fmt.Println("Ripemd :",ripemdResult)
-	b.PubkeyHash = []byte(ripemdResult)
-
-
+	B.PubkeyHash = []byte(ripemdResult)
 	//Checksum
 	checksumResult := shaEncrypt.ShaShaEncrypt(shaResult)
-	fmt.Println("체크섬" , checksumResult)
-	fmt.Printf("체크섬: %x",checksumResult)
-	b.CheckSum = checksumResult
-	//b.CheckSum = fmt.Sprintf("%x", checksumResult)
-	//fmt.Println("b.체크섬" , b.CheckSum)
+	B.CheckSum = checksumResult
 	//baseEncode
-	baseEncoded := base58Encode.Base58Encode(b.Version, b.PubkeyHash, b.CheckSum)
-	fmt.Println("베이스인코드:", baseEncoded)
-	//fmt.Println((baseEncoded))
-	fmt.Println(BitcoinAddress{b.Version, b.PubkeyHash,b.CheckSum })
-
-
-
-
-
+	baseEncoded := base58Encode.Base58Encode(B.Version, B.PubkeyHash, B.CheckSum)
+	return baseEncoded
 }
