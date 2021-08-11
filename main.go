@@ -68,14 +68,6 @@ func main() {
 			fmt.Println("명령어를 제대로 입력하세요.")
 		}
 	}
-
-
-
-
-	N.CreateAddress()
-
-	N.Signing(N.privateKey, data)
-	N.Verification(N.privateKey, N.signhash, N.signature)
 }
 
 func (N *Node) CreateAddress ()  string {
